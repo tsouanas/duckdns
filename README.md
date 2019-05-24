@@ -1,5 +1,5 @@
 # duckdns
-script to update duckdns.org records
+Script to update duckdns.org records.
 
 # Install
 Create a configuration file, by default at:
