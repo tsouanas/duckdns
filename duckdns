@@ -12,7 +12,7 @@ DUCKDNS_LOG=/var/log/duckdns.log
 DUCKDNS_CONF=/etc/duckdns.conf
 
 # read conf
-if [ -f $DUCKDNS_CONF ]; then
+if [ -r $DUCKDNS_CONF ]; then
     . $DUCKDNS_CONF
 else
     echo "Problem reading configuration file: \"#{DUCKDNS_CONF}\""
