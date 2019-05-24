@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# duckdns
+# script to update duckdns.org records
+#
+# Author: Thanos Tsouanas <thanos@tsouanas.org>
+
+# make sure it is writable by user
+DUCKDNS_LOG=/var/log/duckdns.log
+
+# make sure it is not readable by others
+DUCKDNS_CONF=/etc/duckdns.conf
+
+# read conf
+if [ -f $DUCKDNS_CONF ]; then
+    . $DUCKDNS_CONF
+else
+    echo "Problem reading configuration file: \"#{DUCKDNS_CONF}\""
+    echo "Aborting."
+    exit 1
+fi
+
+DUCKDNS_URL="https://www.duckdns.org/update?domains=${DOMAIN}&token=${TOKEN}"
+
+if [ "X$IP" != "X" ]; then
+    DUCKDNS_URL="${DUCKDNS_URL}&ip=${IP}"
+fi
+
+if [ "X$VERBOSE" = "X1" ]; then
+    DUCKDNS_URL="${DUCKDNS_URL}&verbose=true"
+fi
+
+# update duckdns.org records
+if [ `uname` = "OpenBS" ]; then
+    # use OpenBSD's ftp(1)
+    ftp -V -o $DUCKDNS_LOG $DUCKDNS_URL
+else
+    # use curl
+    echo url="${DUCKDNS_URL}" | curl --silent --insecure -o ${DUCKDNS_LOG} --config -
+fi
+
